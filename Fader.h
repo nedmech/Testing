@@ -1,18 +1,30 @@
+/*
+ Name:		Fader.h
+ Created:	7/14/2015
+ Author:	Nathan Durnan
+*/
 #pragma once
-
 #include <stddef.h>
 #include <Arduino.h>
 #include <DmxSimple.h>
 #include <BitBool.h>
 
-#define SMOOTHING_SAMPLES 8
+/*-----------------------------------------------
+--> Defines the number of DMX channels that can be controlled.
+--> Can be changed in blocks of 8 (e.g. 16, 24, 32, etc.)
+-----------------------------------------------*/
 #define DMX_CHANNEL_BLOCK 16
+
+#define SMOOTHING_SAMPLES 8
+#define FADER_LO 204 // ~1V
+#define FADER_HI 820 // ~4V
+#define DMX_MIN 0
+#define DMX_MAX 255
 
 class Fader
 {
 public:
 	Fader();
-	~Fader();
 private:
 	uint8_t faderPin;
 	int faderValue;

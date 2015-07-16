@@ -1,8 +1,15 @@
+/*
+ Name:		Fader.h
+ Created:	7/14/2015
+ Author:	Nathan Durnan
+*/
+
 #include "Fader.h"
 
 /* constructor */
 Fader::Fader()
 {
+	// Initialize members
 	dmxUniverse = NULL;
 	faderValue = 0;
 	faderPin = 1;
@@ -12,11 +19,6 @@ Fader::Fader()
 	inputTotal = 0;
 }
 
-/* destructor */
-Fader::~Fader()
-{
-}
-
 /* read analog input (with smoothing)
 */
 int Fader::readInput()
@@ -24,7 +26,7 @@ int Fader::readInput()
 	/* Apply smoothing algorithm to input value */
 	// subtract the oldest reading from the total
 	inputTotal -= inputValue[inputIndex];
-	// read from the analog input
+	// read new value from the analog input
 	inputValue[inputIndex] = analogRead(faderPin);
 	// add the new reading to the total
 	inputTotal += inputValue[inputIndex];
@@ -35,12 +37,12 @@ int Fader::readInput()
 	return (inputTotal / SMOOTHING_SAMPLES);
 }
 
+/*-----------------------------------------------
+	C++ wrapper (public methods)
+-----------------------------------------------*/
 
-/* C++ wrapper (public methods) */
-
-
-/** Set input pin
-* @param pin Input Analog pin to use (1...NUM_ANALOG_INPUTS)
+/*	Set Analog Input Pin
+	@param pin : Input Analog pin to use (1...NUM_ANALOG_INPUTS)
 */
 void Fader::usePin(uint8_t pin)
 {
@@ -48,15 +50,15 @@ void Fader::usePin(uint8_t pin)
 		faderPin = pin;
 }
 
-/** Set DMX Universe pointer
-* @param universe Pointer to DmxSimpleClass object to use for output
+/*  Set DMX Universe Pointer
+	@param universe : Pointer to DmxSimpleClass object to use for output
 */
 void Fader::setDmxUniverse(DmxSimpleClass* universe)
 {
 	dmxUniverse = universe;
 }
 
-/** Reset all DMX channel mapping to false (OFF)
+/* Reset all DMX Channel mapping to false (OFF)
 */
 void Fader::clearDmxMap()
 {
@@ -64,9 +66,9 @@ void Fader::clearDmxMap()
 		dmxMap[i] = false;
 }
 
-/** Set DMX Mapping for specified channel
-* @param ch DMX Channel to assign mapping (1...DMX_CHANNEL_BLOCK)
-* @param map Turn mapping ON/Off (true/false)
+/*	Set DMX Mapping for specified channel
+	@param ch : DMX Channel to assign mapping (1...DMX_CHANNEL_BLOCK)
+	@param map : Turn mapping ON/Off (true/false)
 */
 void Fader::setDmxMap(int ch, bool map)
 {
@@ -74,19 +76,15 @@ void Fader::setDmxMap(int ch, bool map)
 		dmxMap[ch - 1] = map;
 }
 
-/** Update Fader input and output values
+/* Update Fader input and output values
 */
 void Fader::update()
 {
 	faderValue = readInput();
 	// rescale analog input to DMX output range
-	uint8_t dmxValue = constrain(
-		map(faderValue, 0, 1023, 0, 255),
-		0,255);
+	uint8_t dmxValue = map(faderValue, FADER_LO, FADER_HI, DMX_MIN, DMX_MAX);
+	dmxValue = constrain(dmxValue, DMX_MIN, DMX_MAX);
+	// only send output if channel is mapped to Fader
 	for (byte i = 1; i <= DMX_CHANNEL_BLOCK; i++)
-	{
-		// only send output if channel is mapped to Fader
-		if (dmxMap[i - 1])
-			dmxUniverse->write(i, dmxValue);
-	}
+		if (dmxMap[i - 1]) dmxUniverse->write(i, dmxValue);
 }
