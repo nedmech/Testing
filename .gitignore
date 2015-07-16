@@ -183,6 +183,9 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
+# Visual Micro (Arduino) build files
+Visual Micro/*.xml
+
 # =========================
 # Operating System Files
 # =========================
