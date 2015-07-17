@@ -8,6 +8,7 @@
 #include <Arduino.h>
 #include <DmxSimple.h>
 #include <BitBool.h>
+#include "RollingAverage.h"
 
 /*-----------------------------------------------
 --> Defines the number of DMX channels that can be controlled.
@@ -15,7 +16,6 @@
 -----------------------------------------------*/
 #define DMX_CHANNEL_BLOCK 16
 
-#define SMOOTHING_SAMPLES 8
 #define FADER_LO 204 // ~1V
 #define FADER_HI 820 // ~4V
 #define DMX_MIN 0
@@ -30,16 +30,13 @@ private:
 	int faderValue;
 	DmxSimpleClass* dmxUniverse;
 	BitBool<DMX_CHANNEL_BLOCK> dmxMap;
-	int inputValue[SMOOTHING_SAMPLES];
-	uint16_t inputTotal;
-	byte inputIndex;
+	RollingAverage<int> inputValue;
 public:
 	void usePin(uint8_t);
 	void setDmxUniverse(DmxSimpleClass*);
 	void clearDmxMap();
 	void setDmxMap(int, bool);
 	void update();
-private:
-	int readInput();
+	void update(int);
 };
 

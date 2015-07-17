@@ -24,6 +24,9 @@
     <ClInclude Include="Fader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RollingAverage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fader.cpp">

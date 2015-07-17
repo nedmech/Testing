@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Fader.h" />
+    <ClInclude Include="RollingAverage.h" />
     <ClInclude Include="Visual Micro\.Testing.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
