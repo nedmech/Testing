@@ -5,7 +5,7 @@ Author:	Nathan Durnan
 */
 #pragma once
 
-#define SAMPLES 8 // Number of samples to average over
+#define SAMPLES 32 // Number of samples to average over
 template <typename T> class RollingAverage
 {
 private:

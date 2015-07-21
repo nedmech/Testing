@@ -27,12 +27,16 @@ public:
 	Fader();
 private:
 	uint8_t faderPin;
+	uint8_t off_LED_Pin; // Digital Output indication when Fader is OFF
+	uint8_t on_LED_Pin;  // PWM Output indication mirrors Fader output.
 	int faderValue;
 	DmxSimpleClass* dmxUniverse;
 	BitBool<DMX_CHANNEL_BLOCK> dmxMap;
 	RollingAverage<int> inputValue;
 public:
-	void usePin(uint8_t);
+	void setFaderPin(uint8_t);
+	void setOffPin(uint8_t);
+	void setOnPin(uint8_t);
 	void setDmxUniverse(DmxSimpleClass*);
 	void clearDmxMap();
 	void setDmxMap(int, bool);

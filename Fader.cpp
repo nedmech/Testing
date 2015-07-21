@@ -5,6 +5,7 @@
 */
 
 #include "Fader.h"
+//#define DEBUG_ // un-comment this line for serial debug output
 
 /* constructor */
 Fader::Fader()
@@ -13,6 +14,8 @@ Fader::Fader()
 	dmxUniverse = NULL;
 	faderValue = 0;
 	faderPin = 1;
+	off_LED_Pin = 6;
+	on_LED_Pin = 9;
 	clearDmxMap();
 	inputValue.reset();
 }
@@ -24,10 +27,30 @@ Fader::Fader()
 /**	Set Analog Input Pin
 *	@param pin : Input Analog pin to use (1...NUM_ANALOG_INPUTS)
 */
-void Fader::usePin(uint8_t pin)
+void Fader::setFaderPin(uint8_t pin)
 {
 	if ((pin >= 1) || (pin <= NUM_ANALOG_INPUTS))
 		faderPin = pin;
+}
+
+/**	Set Digital Output Pin for OFF state indication
+*	@param pin : Output Digital pin to use (1...NUM_DIGITAL_PINS)
+*/
+void Fader::setOffPin(uint8_t pin)
+{
+	if ((pin >= 1) || (pin <= NUM_DIGITAL_PINS))
+		off_LED_Pin = pin;
+	pinMode(off_LED_Pin, OUTPUT);
+}
+
+/**	Set PWM Output Pin for ON state indication
+*	@param pin : Output PWM pin to use (1...NUM_DIGITAL_PINS)
+*/
+void Fader::setOnPin(uint8_t pin)
+{
+	if ((pin >= 1) || (pin <= NUM_DIGITAL_PINS))
+		on_LED_Pin = pin;
+	pinMode(on_LED_Pin, OUTPUT);
 }
 
 /**  Set DMX Universe Pointer
@@ -60,6 +83,12 @@ void Fader::setDmxMap(int ch, bool map)
 */
 void Fader::update()
 {
+#ifdef DEBUG_
+	Serial.print("FADER: ");
+	Serial.print(faderPin);
+	Serial.print("\tIN: ");
+	Serial.print(analogRead(faderPin));
+#endif
 	inputValue.newSample(analogRead(faderPin));
 	this->update(inputValue.average());
 }
@@ -70,10 +99,26 @@ void Fader::update(int value)
 {
 	faderValue = constrain(value, 0, 1023);
 	// rescale analog input to DMX output range
-	uint8_t dmxValue = 0;
-	dmxValue = map(faderValue, FADER_LO, FADER_HI, DMX_MIN, DMX_MAX);
-	dmxValue = constrain(dmxValue, DMX_MIN, DMX_MAX);
+	uint8_t dmxValue = constrain(
+		map(faderValue, FADER_LO, FADER_HI, DMX_MIN, DMX_MAX)
+		, DMX_MIN
+		, DMX_MAX
+		);
+#ifdef DEBUG_
+	Serial.print("\tDMX: ");
+	Serial.println(dmxValue);
+#endif
 	// only send output if channel is mapped to Fader
 	for (byte i = 1; i <= DMX_CHANNEL_BLOCK; i++)
 		if (dmxMap[i - 1]) dmxUniverse->write(i, dmxValue);
+	if (dmxValue == 0)
+	{
+		digitalWrite(off_LED_Pin, HIGH);
+		digitalWrite(on_LED_Pin, LOW);
+	}
+	else
+	{
+		digitalWrite(off_LED_Pin, LOW);
+		analogWrite(on_LED_Pin, dmxValue);
+	}
 }
