@@ -14,7 +14,7 @@ Fader::Fader()
 	dmxUniverse = NULL;
 	faderValue = 0;
 	faderPin = 1;
-	off_LED_Pin = 6;
+	off_LED_Pin = 8;
 	on_LED_Pin = 9;
 	clearDmxMap();
 	inputValue.reset();
@@ -89,8 +89,8 @@ void Fader::update()
 	Serial.print("\tIN: ");
 	Serial.print(analogRead(faderPin));
 #endif
-	inputValue.newSample(analogRead(faderPin));
-	this->update(inputValue.average());
+	inputValue.update(analogRead(faderPin));
+	this->update(inputValue.getValue());
 }
 /** Update Fader scaled output value
 *	@param value : Input value (0-1023) to be rescaled and output

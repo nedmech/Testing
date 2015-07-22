@@ -24,7 +24,7 @@
     <ClInclude Include="Fader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RollingAverage.h">
+    <ClInclude Include="Ramp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -8,11 +8,11 @@
 #include <Arduino.h>
 #include <DmxSimple.h>
 #include <BitBool.h>
-#include "RollingAverage.h"
+#include "Ramp.h"
 
 /*-----------------------------------------------
 --> Defines the number of DMX channels that can be controlled.
---> Can be changed in blocks of 8 (e.g. 16, 24, 32, etc.)
+--> Can be changed in blocks of 8 (e.g. 8, 16, 24, 32, etc.)
 -----------------------------------------------*/
 #define DMX_CHANNEL_BLOCK 16
 
@@ -32,7 +32,7 @@ private:
 	int faderValue;
 	DmxSimpleClass* dmxUniverse;
 	BitBool<DMX_CHANNEL_BLOCK> dmxMap;
-	RollingAverage<int> inputValue;
+	Ramp<int> inputValue;
 public:
 	void setFaderPin(uint8_t);
 	void setOffPin(uint8_t);

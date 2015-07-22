@@ -86,5 +86,5 @@ extern "C" void __cxa_pure_virtual() {;}
 #include <Testing.ino>
 #include <Fader.cpp>
 #include <Fader.h>
-#include <RollingAverage.h>
+#include <Ramp.h>
 #endif

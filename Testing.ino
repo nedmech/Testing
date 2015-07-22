@@ -68,7 +68,7 @@ void loop() {
 	{
 		Channel[i].update();
 	}
-	delay(20);  // slow down the loop so fading is smoother
+	delay(10);  // slow down the loop so fading is visible
 }
 
 // Configure the io connections
