@@ -6,18 +6,7 @@
 #include <DmxSimple.h>
 #include <BitBool.h>
 #include "Fader.h"
-
-
-/*------------------------------------------
-	FADER CHANNEL DEFINITIONS
-------------------------------------------*/
-#define FADER_ENTRY    0  // Entryway Ceiling Lights
-#define FADER_HOUSE    1  // Main House Ceiling Lights
-#define FADER_STAGE    2  // All Stage Ceiling Lights
-#define FADER_CHANNELS 3
-/*------------------------------------------
-	END FADER CHANNEL DEFINITIONS
-------------------------------------------*/
+#include "Ramp.h"
 
 /*------------------------------------------
 	DMX OUTPUT CHANNEL DEFINITIONS
@@ -35,8 +24,17 @@
 	END DMX OUTPUT CHANNEL DEFINITIONS
 ------------------------------------------*/
 
-// Fader Channel Object
-Fader Channel[FADER_CHANNELS];
+/*------------------------------------------
+	FADER CHANNEL DEFINITIONS
+------------------------------------------*/
+#define FADER_ENTRY    0  // Entryway Ceiling Lights
+#define FADER_HOUSE    1  // Main House Ceiling Lights
+#define FADER_STAGE    2  // All Stage Ceiling Lights
+#define FADER_CHANNELS 3  // Total number of Faders defined for the controller.
+Fader Channel[FADER_CHANNELS]; // Fader Channel Object
+/*------------------------------------------
+	END FADER CHANNEL DEFINITIONS
+------------------------------------------*/
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -68,7 +66,7 @@ void loop() {
 	{
 		Channel[i].update();
 	}
-	delay(10);  // slow down the loop so fading is visible
+	delay(RAMP_UPDATE_DELAY);  // slow down the loop so fading is visible
 }
 
 // Configure the io connections

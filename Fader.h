@@ -10,6 +10,7 @@
 #include <BitBool.h>
 #include "Ramp.h"
 
+
 /*-----------------------------------------------
 --> Defines the number of DMX channels that can be controlled.
 --> Can be changed in blocks of 8 (e.g. 8, 16, 24, 32, etc.)
@@ -17,7 +18,7 @@
 #define DMX_CHANNEL_BLOCK 16
 
 #define FADER_LO 204 // ~1V
-#define FADER_HI 820 // ~4V
+#define FADER_HI 920 // ~4.5V
 #define DMX_MIN 0
 #define DMX_MAX 255
 
